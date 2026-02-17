@@ -73,7 +73,7 @@ def get_sheet_urls(url):
 	"""Scrapes the RBI page and gets the list of .xlsx sheets."""
 	r = requests.get(url)
 	if r.status_code != 200:
-		raise Exception(f"Invalid response from {url}") 
+		raise Exception("Invalid response from %s" % url) 
 
 	# Extract the urls.
 	s = soup(r.content, "lxml")
@@ -90,7 +90,7 @@ def convert_xlsx_to_csv(src, target, headers):
 	try:
 		sheet = xlrd.open_workbook(src).sheet_by_index(0)
 	except Exception as e:
-		raise Exception(f"Can't open sheet. : {str(e)}") from e
+		raise Exception("Can't open sheet. : %s" % str(e)) 
 
 	with open(target, "wb") as cf:
 		writer = csv.writer(cf, quoting=csv.QUOTE_ALL)
@@ -112,7 +112,7 @@ def convert_xlsx_to_csv(src, target, headers):
 
 				writer.writerow(vals)
 		except Exception as e:
-			raise Exception(f"Can't convert sheet. : {str(e)}") from e
+			raise Exception("Can't convert sheet. : %s" % str(e)) 
 
 
 def url_to_file(url):
@@ -135,7 +135,7 @@ def save_etags(etags, fname):
 		with open(fname, "w") as f:
 			f.write(json.dumps(etags, indent=4))
 	except Exception as e:
-		raise Exception(f"Could not write to {fname} : {str(e)}") from e
+		raise Exception("Could not write to %s : %s" % (fname, str(e)))
 
 
 def get_url_headers(url):
@@ -144,7 +144,7 @@ def get_url_headers(url):
 		r = requests.head(url)
 		return r.headers
 	except Exception as e:
-		raise Exception(f"Can't reach ,url: {url} : {str(e)}") from e
+		raise Exception("Can't reach, url: %s : %s" % (url, str(e)))
 
 
 def download(url, target):
@@ -153,7 +153,7 @@ def download(url, target):
 		r = requests.get(url, stream=True)
 		r.raw.decode_content = True
 	except Exception as e:
-		raise Exception(f"Can't download ,url: {url} : {str(e)}") from e
+		raise Exception("Can't download, url: %s : %s" % (url, str(e)))
 
 	try:
 		with open(target, "wb") as f:
@@ -161,7 +161,7 @@ def download(url, target):
 				if chunk:
 					f.write(chunk)
 	except Exception as e:
-		raise Exception(f"Can't write ,target: {target} : {str(e)}") from e
+		raise Exception("Can't write, target: %s : %s" % (target, str(e)))
 
 	return {
 		"etag": r.headers.get("etag", ""),
